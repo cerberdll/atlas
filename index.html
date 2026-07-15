@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ATLAS">
+<title>ATLAS</title>
+<style>
+:root{--bg:#0E1319;--surface:rgba(91,168,230,0.06);--surface2:rgba(91,168,230,0.12);
+  --line:#2b3a47;--text:#E6EDF3;--muted:#7E8B99;--accent:#5BA8E6;--ok:#57C4B8;--onaccent:#08202f;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(130% 90% at 50% -15%,#18242f 0%,var(--bg) 52%) fixed;
+  background-color:var(--bg);color:var(--text);font-family:-apple-system,system-ui,sans-serif;
+  padding-bottom:96px;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+header{position:sticky;top:0;z-index:10;background:rgba(14,19,25,0.85);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top) + 14px) 16px 12px}
+.brand{display:flex;align-items:baseline;justify-content:space-between}
+h1{font-size:19px;font-weight:800;letter-spacing:.14em;margin:0}
+.sub{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}
+.link{background:none;border:0;color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;
+  text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+main{padding:14px 16px 0}
+h2{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin:20px 2px 8px}
+h2:first-child{margin-top:4px}
+.tabs{display:flex;gap:8px;margin-bottom:8px}
+.tab{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 0;background:var(--surface);
+  color:var(--muted);font-family:ui-monospace,monospace;font-size:14px;font-weight:700;letter-spacing:.08em;cursor:pointer}
+.tab.on{background:rgba(91,168,230,0.18);border-color:var(--accent);color:#cfe6fb;
+  box-shadow:0 0 0 1px rgba(91,168,230,0.25),0 6px 18px -8px rgba(91,168,230,0.55)}
+.meta{display:flex;justify-content:space-between;align-items:center;font-family:ui-monospace,monospace;
+  font-size:12px;color:var(--muted);margin-bottom:12px}
+.dpick{background:transparent;border:0;color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;
+  padding:0;cursor:pointer;-webkit-appearance:none;appearance:none}
+.dpick::-webkit-calendar-picker-indicator{opacity:.45;cursor:pointer}
+.metaR{display:flex;gap:12px;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.045),0 8px 24px -18px rgba(0,0,0,0.8)}
+.chead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:var(--surface2)}
+.cname{font-size:14px;font-weight:600}
+.ctarget{font-family:ui-monospace,monospace;font-size:12px;color:var(--accent);white-space:nowrap}
+.up{font-family:ui-monospace,monospace;font-size:10px;font-weight:700;color:var(--ok);border:1px solid var(--ok);
+  border-radius:6px;padding:2px 6px;white-space:nowrap;box-shadow:0 0 14px -3px rgba(87,196,184,0.6)}
+.sets{padding:8px 12px}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.snum{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);width:16px;flex:0 0 auto}
+.last{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted);width:58px;flex:0 0 auto}
+.inp{flex:1;min-width:0;background:var(--bg);border:1px solid #2b3947;border-radius:8px;color:var(--text);
+  font-family:ui-monospace,monospace;font-size:15px;text-align:center;padding:9px 4px}
+.inp:focus{outline:none;border-color:var(--accent)}
+.inp.done{border-color:rgba(87,196,184,0.6)}
+.x{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+.note{font-family:ui-monospace,monospace;font-size:10px;color:var(--muted);padding-top:2px}
+.save{width:100%;border:0;border-radius:12px;padding:15px 0;font-size:15px;font-weight:700;cursor:pointer;
+  margin:0 0 14px;background:var(--accent);color:var(--onaccent);box-shadow:0 8px 26px -10px rgba(91,168,230,0.75)}
+.save.ok{background:var(--ok)}
+.p{font-size:13.5px;line-height:1.55;color:#c8d2dc;margin:0 2px 8px}
+.exline{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.exline:last-child{border-bottom:0}
+.exline .t{font-family:ui-monospace,monospace;color:var(--accent);white-space:nowrap;font-size:12px}
+.ol{margin:0;padding:2px 0 2px 22px}
+.ol li{font-size:13px;line-height:1.5;color:#c8d2dc;padding:3px 0}
+.macros{display:flex;gap:8px}
+.mcard{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.045)}
+.mcard .lab{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}
+.mcard .kcal{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;color:var(--accent);
+  margin:4px 0 8px;text-shadow:0 0 20px rgba(91,168,230,0.4)}
+.mrow{display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:12px;color:#c8d2dc;padding:2px 0}
+.tl{list-style:none;padding:0;margin:0}
+.tl li{position:relative;padding:0 0 12px 18px;font-size:13px;line-height:1.5;color:#c8d2dc;
+  border-left:1px solid var(--line);margin-left:4px}
+.tl li:before{content:"";position:absolute;left:-4px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tl li:last-child{border-left-color:transparent}
+textarea{width:100%;min-height:300px;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  color:var(--text);font-family:ui-monospace,monospace;font-size:14px;line-height:1.6;padding:14px;resize:vertical}
+textarea:focus{outline:none;border-color:var(--accent)}
+.saved{font-family:ui-monospace,monospace;font-size:11px;color:var(--ok);height:16px;margin:6px 2px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;background:rgba(14,19,25,0.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:0;color:var(--muted);padding:11px 0 12px;cursor:pointer;
+  font-size:11px;font-weight:600;letter-spacing:.02em}
+nav button .dot{display:block;width:5px;height:5px;border-radius:50%;background:transparent;margin:0 auto 5px}
+nav button.on{color:var(--accent)}
+nav button.on .dot{background:var(--accent)}
+.empty{text-align:center;color:var(--muted);font-family:ui-monospace,monospace;font-size:14px;padding:56px 16px}
+.io{display:flex;gap:8px;margin-top:14px}
+.iobtn{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 0;background:var(--surface);
+  color:var(--text);font-family:ui-monospace,monospace;font-size:13px;cursor:pointer}
+.iobtn:active{border-color:var(--accent)}
+.lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+.lockcard{width:100%;max-width:320px;text-align:center}
+.lg{font-size:22px;font-weight:800;letter-spacing:.14em;margin-bottom:6px}
+.lh{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);margin-bottom:20px}
+.pin{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--text);
+  font-family:ui-monospace,monospace;font-size:20px;text-align:center;letter-spacing:.4em;padding:14px;margin-bottom:10px}
+.pin:focus{outline:none;border-color:var(--accent)}
+.lockbtn{width:100%;border:0;border-radius:12px;padding:14px 0;background:var(--accent);color:var(--onaccent);
+  font-size:15px;font-weight:700;cursor:pointer}
+.lockerr{color:#e06a6a;font-family:ui-monospace,monospace;font-size:12px;height:16px;margin-top:8px}
+@media (prefers-color-scheme: light){
+  :root{--bg:#EEF3F8;--surface:rgba(46,125,196,0.07);--surface2:rgba(46,125,196,0.14);
+    --line:#c7d5e2;--text:#16222d;--muted:#5b6a77;--accent:#2E7DC4;--ok:#1FA090;--onaccent:#ffffff;}
+  body{background:radial-gradient(130% 90% at 50% -15%,#ffffff 0%,var(--bg) 55%) fixed;background-color:var(--bg)}
+  header{background:rgba(238,243,248,0.85)}
+  nav{background:rgba(238,243,248,0.92)}
+  .inp{border-color:#c3d2df}
+  .card,.mcard{box-shadow:inset 0 1px 0 rgba(255,255,255,0.7),0 8px 22px -18px rgba(20,40,60,0.3)}
+  .tab.on{color:#0d3a5e}
+  .p,.mrow,.tl li,.ol li{color:#3a4859}
+}
+</style>
+</head>
+<body>
+<div id="lock" class="lock"><div class="lockcard">
+  <div class="lg">ATLAS</div>
+  <div class="lh" id="lockHint"></div>
+  <input class="pin" id="pin1" type="password" inputmode="numeric" placeholder="PIN" maxlength="12" autocomplete="off">
+  <input class="pin" id="pin2" type="password" inputmode="numeric" placeholder="повтори PIN" maxlength="12" autocomplete="off" style="display:none">
+  <button class="lockbtn" id="lockBtn">Войти</button>
+  <div class="lockerr" id="lockErr"></div>
+</div></div>
+<header><div class="brand"><h1>ATLAS</h1><span class="sub" id="ctx"></span></div></header>
+<main id="main"></main>
+<nav id="nav">
+  <button data-sec="training" class="on"><span class="dot"></span>Тренировка</button>
+  <button data-sec="plan"><span class="dot"></span>План</button>
+  <button data-sec="food"><span class="dot"></span>Питание</button>
+  <button data-sec="notes"><span class="dot"></span>Заметки</button>
+</nav>
+<script>
+"use strict";
+const PLAN={
+  A:{title:"Грудь + Спина",ex:[
+    {n:"Жим гантелей на наклонной",sets:4,reps:"6–10"},{n:"Тяга верхнего блока широким хватом",sets:4,reps:"6–10"},
+    {n:"Разводка гантелей на наклонной",sets:2,reps:"10–12"},{n:"Тяга в блоке сидя (узкий хват)",sets:3,reps:"8–12"},
+    {n:"Махи гантелями в стороны",sets:3,reps:"12–15"},{n:"Сгибания на наклонной скамье",sets:3,reps:"8–12"},
+    {n:"Французский жим",sets:3,reps:"6–10"}]},
+  B:{title:"Плечи + Руки",ex:[
+    {n:"Жим штанги на наклонной",sets:4,reps:"6–10"},{n:"Тяга в тренажёре / с упором",sets:4,reps:"8–12"},
+    {n:"Жим гантелей сидя (плечи)",sets:3,reps:"8–10"},{n:"Тяга к лицу",sets:4,reps:"12–20"},
+    {n:"Махи в стороны",sets:3,reps:"12–15"},{n:"«Молот»",sets:3,reps:"8–12"},{n:"Жим ногами",sets:3,reps:"10–15"},
+    {n:"Подъёмы на носки стоя",sets:4,reps:"12–20"}]},
+  C:{title:"Спина + Грудь",ex:[
+    {n:"Подтягивания / верхний блок",sets:4,reps:"6–10"},{n:"Жим гантелей на наклонной",sets:4,reps:"6–10"},
+    {n:"Тяга одной рукой в блоке",sets:3,reps:"10–12"},{n:"Сведения снизу вверх",sets:3,reps:"10–12"},
+    {n:"Обратные разведения / тяга к лицу",sets:3,reps:"15–20"},{n:"Сгибания со штангой / в блоке",sets:3,reps:"8–12"},
+    {n:"Подъёмы на носки сидя",sets:3,reps:"12–20"}]}
+};
+const DAYS=["A","B","C"];
+const SKEY="atlas:sessions",NKEY="atlas:notes";
+const DECISIONS=[
+  "Сплит → фулбоди 3×/нед (выше частота для натурала)",
+  "Жим на наклонной вместо горизонтального как основа груди (верх груди — приоритет 1)",
+  "Бицепс понижен в приоритете — руки по фото уже хорошие",
+  "Задняя дельта через тягу к лицу (V-образность)",
+  "Французский жим вернули в День A",
+  "Питание: лёгкий набор массы вместо рекомпозиции",
+  "Креатин 3–5 г/день добавлен","Добавлена программа бёрпи / отжиманий",
+  "Икры 2×/нед: стоя (День B) + сидя (День C)"];
+const BURPEE=["Обычные","Алмазные (узкие)","С хлопком","Ноги вместе – в сторону – вместе",
+  "С отрывом ноги и противоположной руки","Отведение ноги в сторону с касанием носка (крест-накрест)",
+  "Колено в сторону","Колено под себя","Одна рука ниже, другая выше (поочерёдно)",
+  "Отжимания Тайсона (таз вверх / на плечи)"];
+const store={
+  async get(k){if(window.storage){try{const r=await window.storage.get(k);return r?r.value:null;}catch(e){return null;}}
+    try{return localStorage.getItem(k);}catch(e){return null;}},
+  async set(k,v){if(window.storage){try{await window.storage.set(k,v);return;}catch(e){}}
+    try{localStorage.setItem(k,v);}catch(e){}}
+};
+let sessions=[],notes="",section="training",trainView="log",day="A",entries=[],workDate="";
+const $=id=>document.getElementById(id);
+const todayISO=()=>new Date().toISOString().slice(0,10);
+const fmt=iso=>{const p=iso.split("-");return p[2]+"."+p[1]+".";};
+const topRep=r=>parseInt(r.split("–").pop(),10);
+const blank=d=>PLAN[d].ex.map(e=>Array.from({length:e.sets},()=>({w:"",r:""})));
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function nextDay(){if(!sessions.length)return "A";
+  const last=[...sessions].sort((a,b)=>a.date===b.date?b.saved-a.saved:(a.date<b.date?1:-1))[0];
+  return DAYS[(DAYS.indexOf(last.day)+1)%3];}
+function loadDraft(d){const ex=sessions.find(s=>s.date===workDate&&s.day===d);
+  entries=ex?ex.entries.map(a=>a.map(o=>({...o}))):blank(d);}
+function lastSession(d){return [...sessions].filter(s=>s.day===d&&s.date!==workDate)
+  .sort((a,b)=>a.date<b.date?1:-1)[0]||null;}
+function shouldGoUp(d,ei){const prev=lastSession(d);if(!prev)return false;
+  const ex=PLAN[d].ex[ei];const done=(prev.entries[ei]||[]).filter(s=>s.w&&s.r);
+  if(done.length<ex.sets)return false;const top=topRep(ex.reps);
+  return done.every(s=>parseInt(s.r,10)>=top);}
+function doneStr(){let d=0,t=0;entries.forEach(s=>s.forEach(x=>{t++;if(x.w&&x.r)d++;}));return d+"/"+t+" · "+fmt(workDate);}
+function render(){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.sec===section));
+  if(section==="training")renderTraining();else if(section==="plan")renderPlan();
+  else if(section==="food")renderFood();else renderNotes();
+}
+function renderTraining(){
+  if(trainView==="history"){renderHistory();return;}
+  $("ctx").textContent=doneStr();const prev=lastSession(day);
+  const tabs='<div class="tabs">'+DAYS.map(d=>'<button class="tab '+(d===day?"on":"")+'" data-day="'+d+'">'+d+'</button>').join("")+'</div>';
+  const meta='<div class="meta"><span>День '+day+' · '+PLAN[day].title+'</span>'+
+    '<span class="metaR"><input type="date" class="dpick" id="dpick" value="'+workDate+'" max="'+todayISO()+'">'+
+    '<button class="link" data-action="hist">История</button></span></div>';
+  const cards=PLAN[day].ex.map((ex,ei)=>{
+    const up=shouldGoUp(day,ei);
+    const rows=entries[ei].map((s,si)=>{
+      const ls=prev&&prev.entries[ei]?prev.entries[ei][si]:null;
+      const lt=ls&&(ls.w||ls.r)?ls.w+"×"+ls.r:"—";const dn=s.w&&s.r?"done":"";
+      return '<div class="row"><span class="snum">'+(si+1)+'</span><span class="last">'+lt+'</span>'+
+        '<input class="inp '+dn+'" inputmode="decimal" placeholder="кг" value="'+s.w+'" data-ex="'+ei+'" data-set="'+si+'" data-key="w">'+
+        '<span class="x">×</span>'+
+        '<input class="inp '+dn+'" inputmode="numeric" placeholder="повт" value="'+s.r+'" data-ex="'+ei+'" data-set="'+si+'" data-key="r"></div>';
+    }).join("");
+    return '<section class="card"><div class="chead"><span class="cname">'+ex.n+'</span>'+
+      '<span style="display:flex;gap:8px;align-items:center">'+(up?'<span class="up">↑ Прибавить вес</span>':"")+
+      '<span class="ctarget">'+ex.sets+'×'+ex.reps+'</span></span></div>'+
+      '<div class="sets">'+rows+(prev?'<div class="note">прошлый раз · '+fmt(prev.date)+'</div>':"")+'</div></section>';
+  }).join("");
+  $("main").innerHTML=tabs+meta+'<button class="save" data-action="save">Сохранить тренировку</button>'+cards;
+}
+function renderHistory(){
+  $("ctx").textContent="История";
+  const sorted=[...sessions].sort((a,b)=>a.date===b.date?b.saved-a.saved:(a.date<b.date?1:-1));
+  const back='<div class="meta"><span>прошлые тренировки</span><button class="link" data-action="hist">назад</button></div>';
+  if(!sorted.length){$("main").innerHTML=back+'<div class="empty">Пока ничего не сохранено.</div>';return;}
+  $("main").innerHTML=back+sorted.map(s=>{
+    const rows=PLAN[s.day].ex.map((ex,ei)=>{const done=(s.entries[ei]||[]).filter(x=>x.w&&x.r);
+      if(!done.length)return "";return '<div class="exline"><span>'+ex.n+'</span><span class="t">'+done.map(x=>x.w+"×"+x.r).join("  ")+'</span></div>';}).join("");
+    return '<section class="card"><div class="chead"><span class="ctarget">День '+s.day+' · '+PLAN[s.day].title+'</span>'+
+      '<span class="note">'+fmt(s.date)+'</span></div><div class="sets">'+rows+'</div></section>';
+  }).join("");
+}
+function renderPlan(){
+  $("ctx").textContent="Справка";
+  let h='<h2>Принципы</h2><p class="p">Каждую мышцу 2–3 раза в неделю. Двойная прогрессия: как только на всех подходах '+
+    'достигнут верх диапазона повторений — прибавляй вес. В 1-м подходе оставляй 1–2 повтора в запасе, отдых 2–3 мин на тяжёлых. Ротация A–B–C, 3 раза в неделю.</p>';
+  DAYS.forEach(d=>{h+='<h2>День '+d+' · '+PLAN[d].title+'</h2><section class="card"><div class="sets">'+
+    PLAN[d].ex.map(ex=>'<div class="exline"><span>'+ex.n+'</span><span class="t">'+ex.sets+'×'+ex.reps+'</span></div>').join("")+'</div></section>';});
+  h+='<h2>Бёрпи / отжимания</h2><p class="p">Сначала отжимание, затем: встал — выпад — присед. Прогонять варианты по кругу.</p>'+
+    '<section class="card"><div class="sets"><ol class="ol">'+BURPEE.map(b=>'<li>'+b+'</li>').join("")+'</ol>'+
+    '<div class="exline" style="margin-top:4px"><span>Финиш</span><span class="t">15 медленных концентрированных</span></div></div></section>';
+  h+='<h2>Из наших разговоров</h2><ul class="tl">'+DECISIONS.map(x=>'<li>'+x+'</li>').join("")+'</ul>';
+  $("main").innerHTML=h;
+}
+function renderFood(){
+  $("ctx").textContent="Набор массы";
+  $("main").innerHTML=
+    '<h2>Калории и БЖУ</h2><div class="macros">'+
+    '<div class="mcard"><div class="lab">HIGH · тренировка (3×)</div><div class="kcal">~2950</div>'+
+    '<div class="mrow"><span>Белки</span><span>155 г</span></div><div class="mrow"><span>Углеводы</span><span>400 г</span></div>'+
+    '<div class="mrow"><span>Жиры</span><span>75 г</span></div></div>'+
+    '<div class="mcard"><div class="lab">LOW · отдых (4×)</div><div class="kcal">~2350</div>'+
+    '<div class="mrow"><span>Белки</span><span>155 г</span></div><div class="mrow"><span>Углеводы</span><span>210 г</span></div>'+
+    '<div class="mrow"><span>Жиры</span><span>90 г</span></div></div></div>'+
+    '<p class="p" style="margin-top:10px">В среднем за неделю ≈ 2600 ккал (лёгкий профицит). Через 3–4 недели корректируй: '+
+    '&gt; 0,3–0,4 кг/нед → HIGH −150 ккал; 3 недели без движения → оба +150.</p>'+
+    '<h2>Добавки</h2><section class="card"><div class="sets">'+
+    '<div class="exline"><span>Креатин моногидрат</span><span class="t">3–5 г/день</span></div>'+
+    '<div class="exline"><span>Омега-3</span><span class="t">ежедневно</span></div>'+
+    '<div class="exline"><span>Витамин D3 + K2</span><span class="t">ежедневно</span></div>'+
+    '<div class="exline"><span>Магний</span><span class="t">ежедневно</span></div>'+
+    '<div class="exline"><span>Вода</span><span class="t">~3 л, больше в HIGH-дни</span></div></div></section>'+
+    '<h2>Кардио</h2><p class="p">Перед каждой тренировкой: 10 мин дорожка, 5 км/ч, наклон 15 %.</p>';
+}
+function renderNotes(){
+  $("ctx").textContent="свободно";
+  $("main").innerHTML='<h2>Мои заметки</h2><div class="saved" id="savedMsg"></div>'+
+    '<textarea id="notesArea" placeholder="Ощущения на тренировке, питание, вопросы к Claude на след. раз, рекорды, травмы …">'+esc(notes)+'</textarea>'+
+    '<div class="io"><button class="iobtn" data-action="export">Экспорт бэкапа</button>'+
+    '<button class="iobtn" data-action="import">Импорт</button></div>'+
+    '<input type="file" id="importFile" accept="application/json,.json" style="display:none">';
+}
+$("main").addEventListener("input",e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.key){const ei=+t.dataset.ex,si=+t.dataset.set;entries[ei][si][t.dataset.key]=t.value;
+    const filled=entries[ei][si].w&&entries[ei][si].r;
+    t.closest(".row").querySelectorAll(".inp").forEach(i=>i.classList.toggle("done",!!filled));
+    $("ctx").textContent=doneStr();
+  }else if(t.id==="notesArea"){notes=t.value;clearTimeout(window._nt);
+    window._nt=setTimeout(()=>{store.set(NKEY,notes);const m=$("savedMsg");if(m){m.textContent="сохранено ✓";
+      setTimeout(()=>{if($("savedMsg"))$("savedMsg").textContent="";},1200);}},400);}
+});
+$("main").addEventListener("click",e=>{
+  const d=e.target.closest("[data-day]");if(d){day=d.dataset.day;loadDraft(day);renderTraining();return;}
+  const a=e.target.closest("[data-action]");if(!a)return;
+  if(a.dataset.action==="hist"){trainView=trainView==="history"?"log":"history";renderTraining();}
+  else if(a.dataset.action==="save"){
+    sessions=sessions.filter(s=>!(s.date===workDate&&s.day===day));
+    sessions.push({date:workDate,day,entries:entries.map(x=>x.map(o=>({...o}))),saved:Date.now()});
+    store.set(SKEY,JSON.stringify(sessions));
+    a.textContent="сохранено ✓";a.classList.add("ok");
+    setTimeout(()=>{a.textContent="Сохранить тренировку";a.classList.remove("ok");renderTraining();},1400);}
+  else if(a.dataset.action==="export"){exportData();}
+  else if(a.dataset.action==="import"){$("importFile").click();}
+});
+function exportData(){
+  const blob=new Blob([JSON.stringify({v:1,exported:new Date().toISOString(),sessions,notes},null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="atlas-backup-"+todayISO()+".json";document.body.appendChild(a);a.click();
+  a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+$("main").addEventListener("change",e=>{
+  if(e.target.id==="dpick"){workDate=e.target.value||todayISO();loadDraft(day);renderTraining();return;}
+  if(e.target.id!=="importFile")return;
+  const f=e.target.files[0];if(!f)return;
+  if(!confirm("Заменить текущие данные импортом?")){e.target.value="";return;}
+  const rd=new FileReader();
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);
+    if(Array.isArray(d.sessions))sessions=d.sessions;
+    if(typeof d.notes==="string")notes=d.notes;
+    store.set(SKEY,JSON.stringify(sessions));store.set(NKEY,notes);
+    day=nextDay();loadDraft(day);section="notes";render();
+    alert("Импортировано ✓");
+  }catch(err){alert("Не удалось прочитать файл");}finally{e.target.value="";}};
+  rd.readAsText(f);
+});
+$("nav").addEventListener("click",e=>{const b=e.target.closest("[data-sec]");if(!b)return;
+  section=b.dataset.sec;if(section==="training")trainView="log";render();});
+const PKEY="atlas:pin";
+const lockEl=$("lock"),pin1=$("pin1"),pin2=$("pin2"),lockBtn=$("lockBtn"),lockHint=$("lockHint"),lockErr=$("lockErr");
+async function sha(s){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}catch(e){return "p:"+s;}}
+let setupMode=false;
+(function initLock(){
+  let stored=null;try{stored=localStorage.getItem(PKEY);}catch(e){}
+  setupMode=!stored;
+  if(setupMode){lockHint.textContent="Придумай PIN для входа";pin2.style.display="block";lockBtn.textContent="Задать PIN";}
+  else{lockHint.textContent="Введите PIN";}
+  setTimeout(()=>pin1.focus(),100);
+})();
+async function tryUnlock(){
+  const a=pin1.value.trim();lockErr.textContent="";
+  if(setupMode){
+    const b=pin2.value.trim();
+    if(a.length<4){lockErr.textContent="Минимум 4 символа";return;}
+    if(a!==b){lockErr.textContent="PIN не совпадает";return;}
+    try{localStorage.setItem(PKEY,await sha(a));}catch(e){}
+    lockEl.style.display="none";
+  }else{
+    if(await sha(a)===((()=>{try{return localStorage.getItem(PKEY);}catch(e){return null;}})())){lockEl.style.display="none";}
+    else{lockErr.textContent="Неверный PIN";pin1.value="";pin1.focus();}
+  }
+}
+lockBtn.addEventListener("click",tryUnlock);
+pin1.addEventListener("keydown",e=>{if(e.key==="Enter")tryUnlock();});
+pin2.addEventListener("keydown",e=>{if(e.key==="Enter")tryUnlock();});
+
+(async()=>{workDate=todayISO();const rs=await store.get(SKEY);sessions=rs?JSON.parse(rs):[];
+  notes=(await store.get(NKEY))||"";day=nextDay();loadDraft(day);render();})();
+</script>
+</body>
+</html>
