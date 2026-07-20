@@ -156,7 +156,7 @@ const DECISIONS=[
   "Бицепс понижен в приоритете — руки по фото уже хорошие",
   "Задняя дельта через тягу к лицу (V-образность)",
   "Французский жим вернули в День A",
-  "Питание: лёгкий набор массы вместо рекомпозиции",
+  "Питание: рекомпозиция (лёгкий дефицит), белок ↑ до 165 г",
   "Креатин 3–5 г/день добавлен","Добавлена программа бёрпи / отжиманий",
   "Икры 1×/нед: сидя (День C)"];
 const BURPEE=["Обычные","Алмазные (узкие)","С хлопком","Ноги вместе – в сторону – вместе",
@@ -242,17 +242,17 @@ function renderPlan(){
   $("main").innerHTML=h;
 }
 function renderFood(){
-  $("ctx").textContent="Набор массы";
+  $("ctx").textContent="Рекомпозиция";
   $("main").innerHTML=
     '<h2>Калории и БЖУ</h2><div class="macros">'+
-    '<div class="mcard"><div class="lab">HIGH · тренировка (3×)</div><div class="kcal">~2950</div>'+
-    '<div class="mrow"><span>Белки</span><span>155 г</span></div><div class="mrow"><span>Углеводы</span><span>400 г</span></div>'+
-    '<div class="mrow"><span>Жиры</span><span>75 г</span></div></div>'+
-    '<div class="mcard"><div class="lab">LOW · отдых (4×)</div><div class="kcal">~2350</div>'+
-    '<div class="mrow"><span>Белки</span><span>155 г</span></div><div class="mrow"><span>Углеводы</span><span>210 г</span></div>'+
-    '<div class="mrow"><span>Жиры</span><span>90 г</span></div></div></div>'+
-    '<p class="p" style="margin-top:10px">В среднем за неделю ≈ 2600 ккал (лёгкий профицит). Через 3–4 недели корректируй: '+
-    '&gt; 0,3–0,4 кг/нед → HIGH −150 ккал; 3 недели без движения → оба +150.</p>'+
+    '<div class="mcard"><div class="lab">HIGH · тренировка (3×)</div><div class="kcal">~2550</div>'+
+    '<div class="mrow"><span>Белки</span><span>165 г</span></div><div class="mrow"><span>Углеводы</span><span>315 г</span></div>'+
+    '<div class="mrow"><span>Жиры</span><span>70 г</span></div></div>'+
+    '<div class="mcard"><div class="lab">LOW · отдых (4×)</div><div class="kcal">~2200</div>'+
+    '<div class="mrow"><span>Белки</span><span>165 г</span></div><div class="mrow"><span>Углеводы</span><span>200 г</span></div>'+
+    '<div class="mrow"><span>Жиры</span><span>80 г</span></div></div></div>'+
+    '<p class="p" style="margin-top:10px">Рекомпозиция: в среднем ≈ 2350 ккал/день (лёгкий дефицит ~−150). Цель ~−0,2 кг/нед. '+
+    'Ориентир — зеркало и сила, не только весы. Теряешь &gt;0,4 кг/нед или падает сила → +150 ккал (углеводы); 3 недели без изменений → −150.</p>'+
     '<h2>Добавки</h2><section class="card"><div class="sets">'+
     '<div class="exline"><span>Креатин моногидрат</span><span class="t">3–5 г/день</span></div>'+
     '<div class="exline"><span>Омега-3</span><span class="t">ежедневно</span></div>'+
