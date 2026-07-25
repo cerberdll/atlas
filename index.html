@@ -15,8 +15,12 @@ body{margin:0;background:radial-gradient(130% 90% at 50% -15%,#18242f 0%,var(--b
   padding-bottom:96px;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 header{position:sticky;top:0;z-index:10;background:rgba(14,19,25,0.85);backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
-  padding:calc(env(safe-area-inset-top) + 14px) 16px 12px}
-.brand{display:flex;align-items:baseline;justify-content:space-between}
+  padding:calc(env(safe-area-inset-top) + 11px) 16px 10px}
+.brand{display:flex;align-items:center;justify-content:space-between}
+.hright{display:flex;align-items:center;gap:10px}
+.hsave{border:0;border-radius:8px;padding:7px 14px;background:var(--accent);color:var(--onaccent);
+  font-size:12px;font-weight:700;cursor:pointer}
+.hsave.ok{background:var(--ok)}
 h1{font-size:19px;font-weight:800;letter-spacing:.14em;margin:0}
 .sub{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}
 .link{background:none;border:0;color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;
@@ -122,7 +126,7 @@ nav button.on .dot{background:var(--accent)}
   <button class="lockbtn" id="lockBtn">Войти</button>
   <div class="lockerr" id="lockErr"></div>
 </div></div>
-<header><div class="brand"><h1>ATLAS</h1><span class="sub" id="ctx"></span></div></header>
+<header><div class="brand"><h1>ATLAS</h1><div class="hright"><span class="sub" id="ctx"></span><button class="hsave" id="hsave">Сохранить</button></div></div></header>
 <main id="main"></main>
 <nav id="nav">
   <button data-sec="training" class="on"><span class="dot"></span>Тренировка</button>
@@ -189,11 +193,13 @@ function shouldGoUp(d,ei){const prev=lastSession(d);if(!prev)return false;
   return done.every(s=>parseInt(s.r,10)>=top);}
 function doneStr(){let d=0,t=0;entries.forEach(s=>s.forEach(x=>{t++;if(x.w&&x.r)d++;}));return d+"/"+t+" · "+fmt(workDate);}
 function render(){
+  $("hsave").style.display="none";
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.sec===section));
   if(section==="training")renderTraining();else if(section==="plan")renderPlan();
   else if(section==="food")renderFood();else renderNotes();
 }
 function renderTraining(){
+  $("hsave").style.display=trainView==="history"?"none":"";
   if(trainView==="history"){renderHistory();return;}
   $("ctx").textContent=doneStr();const prev=lastSession(day);
   const tabs='<div class="tabs">'+DAYS.map(d=>'<button class="tab '+(d===day?"on":"")+'" data-day="'+d+'">'+d+'</button>').join("")+'</div>';
@@ -215,7 +221,7 @@ function renderTraining(){
       '<span class="ctarget">'+ex.sets+'×'+ex.reps+'</span></span></div>'+
       '<div class="sets">'+rows+(prev?'<div class="note">прошлый раз · '+fmt(prev.date)+'</div>':"")+'</div></section>';
   }).join("");
-  $("main").innerHTML=tabs+meta+'<button class="save" data-action="save">Сохранить тренировку</button>'+cards;
+  $("main").innerHTML=tabs+meta+cards;
 }
 function renderHistory(){
   $("ctx").textContent="История";
@@ -283,15 +289,18 @@ $("main").addEventListener("click",e=>{
   const d=e.target.closest("[data-day]");if(d){day=d.dataset.day;loadDraft(day);renderTraining();return;}
   const a=e.target.closest("[data-action]");if(!a)return;
   if(a.dataset.action==="hist"){trainView=trainView==="history"?"log":"history";renderTraining();}
-  else if(a.dataset.action==="save"){
-    sessions=sessions.filter(s=>!(s.date===workDate&&s.day===day));
-    sessions.push({date:workDate,day,entries:entries.map(x=>x.map(o=>({...o}))),saved:Date.now()});
-    store.set(SKEY,JSON.stringify(sessions));
-    a.textContent="сохранено ✓";a.classList.add("ok");
-    setTimeout(()=>{a.textContent="Сохранить тренировку";a.classList.remove("ok");renderTraining();},1400);}
   else if(a.dataset.action==="export"){exportData();}
   else if(a.dataset.action==="import"){$("importFile").click();}
 });
+function saveSession(){
+  sessions=sessions.filter(s=>!(s.date===workDate&&s.day===day));
+  sessions.push({date:workDate,day,entries:entries.map(x=>x.map(o=>({...o}))),saved:Date.now()});
+  store.set(SKEY,JSON.stringify(sessions));
+  const b=$("hsave");b.textContent="✓";b.classList.add("ok");
+  setTimeout(()=>{b.textContent="Сохранить";b.classList.remove("ok");},1400);
+  renderTraining();
+}
+$("hsave").addEventListener("click",saveSession);
 function exportData(){
   const blob=new Blob([JSON.stringify({v:1,exported:new Date().toISOString(),sessions,notes},null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
